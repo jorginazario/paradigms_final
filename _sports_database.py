@@ -1,179 +1,115 @@
 #!/usr/bin/env python3
+
+##################
+# import modules #
+##################
 import sys
 import os
+
+
+#########
+# class #
+#########
 class _sports_database:
 	def __init__(self):
-# your code here
-		self.teams = {}	#initialize my movie dict
-		#self.stats = {}
-	
-# also write load_movies() and print_sorted_movies()
-	def load_teams(self, teams_file):	#load movies
-		myfile = open(teams_file)		#open and save file 
-		counter = 1
-		for line in myfile:					#traverse each line in the file
-			team = line.rstrip()
-			self.teams[counter] = team	#{1: "AFC B	Bournemouth", 2: "AFC Telford"}
-			counter+=1
-	
-	def load_one_team(self, team_file, tid):
-		myfile = open(team_file)
-		for line in myfile:
-			team = line.rstrip().split("::")
-			if mov[0] == mid:
-				team.movies[mov[0]] = mov[1:]
+		self.teams = {} # {"Arsenal": 1}
+		self.data = {} # {1: {"W": 5, "L": 2, "D": 1, "SFor": 87, "SAgainst": 78} }
 
-	#Given a movie ID, returns a list with two elements or None 
-	#First string is movie name, second string is movie genre
-	def get_movie(self,mid):
-		if str(mid) in self.movies.keys():
-			#mov = self.movies[str(mid)]
-			return self.movies[str(mid)]
-		else:
-			return None
-
-	#Returns a list of integers containing all movie IDs (ints)
-	def get_movies(self):
-		mlist = []
-		for i in self.movies.keys():
-			mlist.append(int(i))
-		return mlist
+	# LOADS #
+	def load_teams(self, teams_file):
+		self.teams.clear()
+		myFile = open(teams_file)
+		for line in myFile:
+			line = line.strip()
+			line = line.split(',')
+			self.teams[line[1]] = int(line[0])
+		myFile.close()
 	
-	#Updates the movie data member entry with the specified movie ID
-	#Or creates a new entry if data for the movie that IS is not present
-	def set_movie(self, mid, mlist):
-		title = mlist[0]
-		genre = mlist[1]
-		new = [title, genre]		
-		self.movies[str(mid)] = new
-
-	#This method will delete the entry with the specified movie ID
-	def delete_movie(self,mid):
-		if str(mid) in self.movies.keys():
-			del self.movies[str(mid)]
+	def load_data(self, data_file):
+		self.data.clear()
+		myFile = open(data_file)
+		for line in myFile:
+			line = line.strip()
+			line = line.split(',')
+			team1 = self.get_team_id(line[1])
+			team2 = self.get_team_id(line[2])
+			teamScores = [int(x) for x in line[3].split('-')]
+			if team1 not in self.data:
+				self.data[team1] = {"W": 0, "L": 0, "D": 0, "SFor": 0, "SAgainst": 0}
+			if team2 not in self.data:
+				self.data[team2] = {"W": 0, "L": 0, "D": 0, "SFor": 0, "SAgainst": 0}
+			self.data[team1]["SFor"] += teamScores[0]
+			self.data[team1]["SAgainst"] += teamScores[1]
+			self.data[team2]["SFor"] += teamScores[1]
+			self.data[team2]["SAgainst"] += teamScores[0]
+			if teamScores[0] > teamScores[1]:
+				self.data[team1]["W"] += 1
+				self.data[team2]["L"] += 1
+			elif teamScores[0] < teamScores[1]:
+				self.data[team2]["W"] += 1
+				self.data[team1]["L"] += 1
+			else:
+				self.data[team1]["D"] += 1
+				self.data[team2]["D"] += 1
+		myFile.close()
 		
-	#######################
-	#User related functions
-	#######################
-
-	###################################################
-	#ratings.dat: UserID::MovieID::Rating::TimeStamp
-	#users.dat: UserID::Gender::Age::Occupation:Zip-code
-	#movies.dat: MovieID::Title::Genres
-	###################################################
-
-	#Opens the file with the name given as a parameter and loads the user 
-	#data from that file into a dictinary or list of dictionaries.
-	def load_users(self, usersfile):
-		ufile = open(usersfile)
-		for line in ufile:
-			l = line.rstrip().split("::")
-			self.users[l[0]] = l[1:]	#[l[1],l[2],l[3],l[4]]
-
-	def get_user(self, uid):
-		userinfo = []
-		if str(uid) in self.users.keys():
-				user = self.users[str(uid)]
-				userinfo.append(user[0])
-				userinfo.append(int(user[1]))
-				userinfo.append(int(user[2]))
-				userinfo.append(user[3])
-				return userinfo
-		else:
-			return None
-	
-	def get_users(self):
-		ulist = []
-		for i in self.users.keys():
-			ulist.append(int(i))
-		return ulist
-
-	def set_user(self, uid, ulist):
-		gender = ulist[0]
-		age = ulist[1]
-		occup = ulist[2]
-		zipcode = ulist[3]
-		new = [gender, age, occup, zipcode]
-		self.users[str(uid)] = new
-	
-	def delete_user(self, uid):
-		if str(uid) in self.users.keys():
-			del self.users[str(uid)]
-
-	####################################
-	#Ratings
-	####################################
-	
-	def load_ratings(self, ratings_file):
-		rfile = open(ratings_file)
-
-		for line in rfile:
-			l = line.split("::")
-			uid = int(l[0])
-			mid = int(l[1])
-			rating = int(l[2])		
-			if mid not in self.ratings.keys():
-				self.ratings[mid] = {}
-			self.ratings[mid][uid] = rating
+	# GETS #
+	def get_team_id(self, teamName):
+		return self.teams[teamName]
 		
-
-	def get_rating(self, mid):
-		mySum = 0.0
-		#print(self.ratings.keys())
-		if mid not in self.ratings.keys():
-			return 0
-		else:
-			for i in self.ratings[mid].values():
-				mySum += i
-			
-		average = mySum/float(len(self.ratings[mid]))
-		return average
+	def get_team_wins(self, teamName):
+		return self.data[self.get_team_id(teamName)]["W"]
 	
-	def get_highest_rated_movie(self):
-		high = 0
-		high_name = None
-		low_mid = 4000
-		for mid in self.ratings.keys():
-			average = self.get_rating(mid)
-			if average > high:
-				high = average
-				high_name = self.get_movie(mid)[0]
-			elif average == high and mid < low_mid:
-				low_mid = mid
-				high = average
-				high_name = self.get_movie(mid)[0]
-		
-		return high_name			
+	def get_team_losses(self, teamName):
+		return self.data[self.get_team_id(teamName)]["L"]
 	
-	def set_user_movie_rating(self,uid,mid,rating):
-		self.ratings[mid][uid] = rating
-
-	def get_user_movie_rating(self, uid, mid):
-		if mid not in self.ratings:
-			if uid not in self.ratings[mid]:
-				return None
-
-		else:																					#CHECK TABS
-			return self.ratings[mid][uid]
-
-	def delete_all_ratings(self):
-		del self.ratings
-		self.ratings = {}
-
-#	def print_sorted_movies(self):		#print movies
-#		sorted_movies = sorted(self.movies)			#sort the list
-#		for line in self_movies:		#traverse the list, element by element and print each one
-#			print (line)
-
+	def get_team_draws(self, teamName):
+		return self.data[self.get_team_id(teamName)]["D"]
 	
+	def get_team_scoresFor(self, teamName):
+		return self.data[self.get_team_id(teamName)]["SFor"]
+	
+	def get_team_scoresAgainst(self, teamName):
+		return self.data[self.get_team_id(teamName)]["SAgainst"]
+	
+	# SETS #
+	def set_team_wins(self, teamName, wins):
+		self.data[self.get_team_id(teamName)]["W"] = int(wins)
+	
+	def set_team_losses(self, teamName, losses):
+		self.data[self.get_team_id(teamName)]["L"] = int(losses)
+	
+	def set_team_draws(self, teamName, draws):
+		self.data[self.get_team_id(teamName)]["D"] = int(draws)
+	
+	def set_team_scoresFor(self, teamName, scoresFor):
+		self.data[self.get_team_id(teamName)]["SFor"] = int(scoresFor)
+	
+	def set_team_scoresAgainst(self, teamName, scoresAgainst):
+		self.data[self.get_team_id(teamName)]["SAgainst"] = int(scoresAgainst)
+	
+	# RESETS #
+	def reset_full_data(self):
+		for team in self.data:
+			self.data[team]["W"] = 0
+			self.data[team]["L"] = 0
+			self.data[team]["D"] = 0
+			self.data[team]["SFor"] = 0
+			self.data[team]["SAgainst"] = 0
 
+	def reset_team_data(self, teamName):
+		self.data[self.get_team_id(teamName)]["W"] = 0
+		self.data[self.get_team_id(teamName)]["L"] = 0
+		self.data[self.get_team_id(teamName)]["D"] = 0
+		self.data[self.get_team_id(teamName)]["SFor"] = 0
+		self.data[self.get_team_id(teamName)]["SAgainst"] = 0
+
+##################
+# main execution #
+##################
 if __name__ == "__main__":
-	mdb = _movie_database()
-#### MOVIES ########
-	mdb.load_movies('ml-1m/movies.dat')
-	mdb.load_ratings('ml-1m/ratings.dat')
-	mdb.load_users('ml-1m/users.dat')
-#	mdb.get_rating(2490)
-	mdb.get_rating(2490)
-#	mdb.print_sorted_movies()
-
+	tdb = _sports_database()
+	tdb.load_teams('data_files/teams1.csv')
+	tdb.load_data('data_files/1-premierleague.csv')
+	for team in tdb.data.items():
+		print(team)
