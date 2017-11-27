@@ -17,7 +17,6 @@ class TestSportsDatabase(unittest.TestCase):
 	def test_delete_teams(self):
 		self.reset_data()
 
-
 	def test_get_team_id(self):
 		self.reset_data()
 		team = self.tdb.get_team_id("Arsenal")
@@ -74,6 +73,18 @@ class TestSportsDatabase(unittest.TestCase):
 		self.tdb.delete_all_data()
 		number_of_teams = len(self.tdb.teams)
 		self.assertEqual(number_of_teams, 0)
+	
+	def test_set_team_wins(self):
+		self.reset_data()
+		self.tdb.set_team_wins("Arsenal", 100)
+		teamWins = self.tdb.get_team_wins("Arsenal")
+		self.assertEqual(teamWins, 100)
+	
+	def test_set_team_scoresFor(self):
+		self.reset_data()
+		self.tdb.set_team_scoresFor("Arsenal", 138)
+		teamScoresFor = self.tdb.get_team_scoresFor("Arsenal")
+		self.assertEqual(teamScoresFor, 138)
 
 if __name__ == "__main__":
 	unittest.main()
