@@ -55,22 +55,40 @@ class _sports_database:
 		
 	# GETS #
 	def get_team_id(self, teamName):
-		return self.teams[teamName]
+		if teamName in self.teams:
+			return self.teams[teamName]
+		else:
+			return None
 		
 	def get_team_wins(self, teamName):
-		return self.data[self.get_team_id(teamName)]["W"]
+		if teamName in self.teams:
+			return self.data[self.get_team_id(teamName)]["W"]
+		else:
+			return None
 	
 	def get_team_losses(self, teamName):
-		return self.data[self.get_team_id(teamName)]["L"]
+		if teamName in self.teams:
+			return self.data[self.get_team_id(teamName)]["L"]
+		else:
+			return None
 	
 	def get_team_draws(self, teamName):
-		return self.data[self.get_team_id(teamName)]["D"]
+		if teamName in self.teams:
+			return self.data[self.get_team_id(teamName)]["D"]
+		else:
+			return None
 	
 	def get_team_scoresFor(self, teamName):
-		return self.data[self.get_team_id(teamName)]["SFor"]
+		if teamName in self.teams:
+			return self.data[self.get_team_id(teamName)]["SFor"]
+		else:
+			return None
 	
 	def get_team_scoresAgainst(self, teamName):
-		return self.data[self.get_team_id(teamName)]["SAgainst"]
+		if teamName in self.teams:
+			return self.data[self.get_team_id(teamName)]["SAgainst"]
+		else:
+			return None
 	
 	# SETS #
 	def set_team_wins(self, teamName, wins):
@@ -89,6 +107,10 @@ class _sports_database:
 		self.data[self.get_team_id(teamName)]["SAgainst"] = int(scoresAgainst)
 	
 	# RESETS #
+	def delete_all_data(self):
+		self.teams.clear()
+		self.data.clear()
+
 	def reset_full_data(self):
 		for team in self.data:
 			self.data[team]["W"] = 0
