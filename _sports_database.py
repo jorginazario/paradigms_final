@@ -110,6 +110,11 @@ class _sports_database:
 	def delete_all_data(self):
 		self.teams.clear()
 		self.data.clear()
+	
+	def delete_team_data(self, teamName):
+		team_id = self.get_team_id(teamName)
+		del self.data[team_id]
+		del self.teams[teamName]
 
 	def reset_full_data(self):
 		for team in self.data:
@@ -133,5 +138,6 @@ if __name__ == "__main__":
 	tdb = _sports_database()
 	tdb.load_teams('data_files/teams1.csv')
 	tdb.load_data('data_files/1-premierleague.csv')
+	tdb.set_team_losses("Arsenal", 1000)
 	for team in tdb.data.items():
 		print(team)

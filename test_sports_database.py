@@ -13,17 +13,67 @@ class TestSportsDatabase(unittest.TestCase):
 		self.tdb.delete_all_data()
 		self.tdb.load_teams('data_files/teams1.csv')
 		self.tdb.load_data('data_files/1-premierleague.csv')
+	
+	def test_delete_teams(self):
+		self.reset_data()
 
-	def test_get_movie_id(self):
+
+	def test_get_team_id(self):
 		self.reset_data()
-		movie = self.tdb.get_team_id("Arsenal")
-		self.assertEquals(movie, 11)
-		movie = self.tdb.get_team_id("asl;dkfj")
-		self.assertEquals(movie, None)
-	def test_set_movie_wins(self):
+		team = self.tdb.get_team_id("Arsenal")
+		self.assertEqual(team, 11)
+		team = self.tdb.get_team_id("team_that_doesn't_exist")
+		self.assertEqual(team, None)
+	def test_get_team_wins(self):
 		self.reset_data()
-		movie = self.tdb.get_team_id("a;lskdfj")
-		self.assertEquals(movie, None)
+		teamWins = self.tdb.get_team_wins("Arsenal")
+		self.assertEqual(teamWins, 24)
+		teamWins = self.tdb.get_team_wins("team_that_doesn't_exist")
+		self.assertEqual(teamWins, None)
+	
+	def test_get_team_losses(self):
+		self.reset_data()
+		teamLosses = self.tdb.get_team_losses("Arsenal")
+		self.assertEqual(teamLosses, 7)
+		teamLosses = self.tdb.get_team_losses("team_that_doesn't_exist")
+		self.assertEqual(teamLosses, None)
+	
+	def test_get_team_draws(self):
+		self.reset_data()
+		teamDraws = self.tdb.get_team_draws("Arsenal")
+		self.assertEqual(teamDraws, 7)
+		teamDraws = self.tdb.get_team_draws("team_that_doesn't_exist")
+		self.assertEqual(teamDraws, None)
+	
+	def test_get_team_scoresFor(self):
+		self.reset_data()
+		teamScoresFor = self.tdb.get_team_scoresFor("Arsenal")
+		self.assertEqual(teamScoresFor, 68)
+		teamScoresFor = self.tdb.get_team_scoresFor("team_that_doesn't_exist")
+		self.assertEqual(teamScoresFor, None)
+	
+	def test_get_team_scoresAgainst(self):
+		self.reset_data()
+		teamScoresAgainst = self.tdb.get_team_scoresAgainst("Arsenal")
+		self.assertEqual(teamScoresAgainst, 41)
+		teamScoresAgainst = self.tdb.get_team_scoresAgainst("team_that_doesn't_exist")
+		self.assertEqual(teamScoresAgainst, None)
+	
+	def test_delete_one_team(self):
+		self.reset_data()
+		team_id = self.tdb.get_team_id("Arsenal")
+		self.assertEqual(team_id, 11)
+		self.tdb.delete_team_data("Arsenal")
+		team_id = self.tdb.get_team_id("Arsenal")
+		self.assertEqual(team_id, None)
+	
+	def test_delete_all_teams(self):
+		self.reset_data()
+		number_of_teams = len(self.tdb.teams)
+		self.assertEqual(number_of_teams, 229)
+		self.tdb.delete_all_data()
+		number_of_teams = len(self.tdb.teams)
+		self.assertEqual(number_of_teams, 0)
 
 if __name__ == "__main__":
 	unittest.main()
