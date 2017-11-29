@@ -13,6 +13,14 @@ class TestSportsDatabase(unittest.TestCase):
 		self.tdb.delete_all_data()
 		self.tdb.load_teams('data_files/teams1.csv')
 		self.tdb.load_data('data_files/1-premierleague.csv')
+		self.tdb.load_rank()
+	
+	def test_match(self):
+		self.reset_data()
+		winner = self.tdb.match("Arsenal_Aston Villa")
+		self.assertEqual(winner, "Arsenal")
+		winner = self.tdb.match("Man United_Fulham")
+		self.assertEqual(winner, "Man United")
 	
 	def test_delete_teams(self):
 		self.reset_data()

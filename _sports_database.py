@@ -14,6 +14,38 @@ class _sports_database:
 	def __init__(self):
 		self.teams = {} # {"Arsenal": 1}
 		self.data = {} # {1: {"W": 5, "L": 2, "D": 1, "SFor": 87, "SAgainst": 78} }
+		self.rank = {}
+
+	# RECOMMENDATION of Match Winner#
+	def load_rank(self):
+		for team_name in self.teams:
+			if self.teams[team_name] not in self.data.keys():
+				self.rank[team_name] = -1
+			else:
+				sFor = self.get_team_scoresFor(team_name)
+				sAgainst = self.get_team_scoresAgainst(team_name)
+				rank = sFor / sAgainst
+				self.rank[team_name] = rank
+
+	def match(self, two_teams):
+		two_teams = two_teams.split("_")
+		team1 = two_teams[0]
+		team2 = two_teams[1]
+		invalid_team1 = False
+		invalid_team2 = False
+		output_error = "Invalid team input"
+		if self.teams[team1] not in self.data.keys():
+			invalid_team1 = True
+		elif self.teams[team2] not in self.data.keys():
+			invalid_team2 = True
+		if invalid_team1 == False and invalid_team2 == False:
+			if self.rank[team1] > self.rank[team2]:
+				return team1
+			else:
+				return team2
+		else:
+			return output_error
+			
 
 	# LOADS #
 	def load_teams(self, teams_file):
@@ -33,6 +65,7 @@ class _sports_database:
 			line = line.split(',')
 			team1 = self.get_team_id(line[1])
 			team2 = self.get_team_id(line[2])
+			#print('{} {}'.format(team1, team2))
 			teamScores = [int(x) for x in line[3].split('-')]
 			if team1 not in self.data:
 				self.data[team1] = {"W": 0, "L": 0, "D": 0, "SFor": 0, "SAgainst": 0}
@@ -52,10 +85,10 @@ class _sports_database:
 				self.data[team1]["D"] += 1
 				self.data[team2]["D"] += 1
 		myFile.close()
-		
+	
 	# GETS #
 	def get_team_id(self, teamName):
-		if teamName in self.teams:
+		if teamName in self.teams.keys():
 			return self.teams[teamName]
 		else:
 			return None
@@ -79,7 +112,7 @@ class _sports_database:
 			return None
 	
 	def get_team_scoresFor(self, teamName):
-		if teamName in self.teams:
+		if teamName in self.teams.keys():
 			return self.data[self.get_team_id(teamName)]["SFor"]
 		else:
 			return None
@@ -139,5 +172,12 @@ if __name__ == "__main__":
 	tdb.load_teams('data_files/teams1.csv')
 	tdb.load_data('data_files/1-premierleague.csv')
 	tdb.set_team_losses("Arsenal", 1000)
-	for team in tdb.data.items():
-		print(team)
+	tdb.load_rank()
+	#print(tdb.match("Arsenal_Aston Villa"))
+	
+	#tdb.load_rank()
+	#print(tdb.get_team_scoresFor("AFC Bournemouth"))
+	#print(tdb.data)
+	#print(tdb.data["2"]["SFor"])
+	#for team in tdb.data.items():
+		#print(team)
