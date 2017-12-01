@@ -88,11 +88,29 @@ class TestSportsDatabase(unittest.TestCase):
 		teamWins = self.tdb.get_team_wins("Arsenal")
 		self.assertEqual(teamWins, 100)
 	
+	def test_set_team_losses(self):
+		self.reset_data()
+		self.tdb.set_team_losses("Arsenal", 100)
+		teamLosses = self.tdb.get_team_losses("Arsenal")
+		self.assertEqual(teamLosses, 100)
+	
+	def test_set_team_draws(self):
+		self.reset_data()
+		self.tdb.set_team_draws("Arsenal", 100)
+		teamDraws = self.tdb.get_team_draws("Arsenal")
+		self.assertEqual(teamDraws, 100)
+
 	def test_set_team_scoresFor(self):
 		self.reset_data()
 		self.tdb.set_team_scoresFor("Arsenal", 138)
 		teamScoresFor = self.tdb.get_team_scoresFor("Arsenal")
 		self.assertEqual(teamScoresFor, 138)
+
+	def test_set_team_scoresAgainst(self):
+		self.reset_data()
+		self.tdb.set_team_scoresAgainst("Arsenal", 140)
+		teamScoresAgainst = self.tdb.get_team_scoresAgainst("Arsenal")
+		self.assertEqual(teamScoresAgainst, 140)
 
 if __name__ == "__main__":
 	unittest.main()
