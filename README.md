@@ -9,9 +9,6 @@ Stats Data:
 - Keep track of each teams losses
 - Recommendation as to which team you should bet on 
 
-Requests:
-# TODO before required deadline
-
 Self Dictionaries:
 - self.teams = {"name": "Arsenal", "tid": 1}
 - self.data = {"W": 17, "L": 5, "D": 2, "SFor": 87, "SAgainst": 78}
