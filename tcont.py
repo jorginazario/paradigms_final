@@ -63,6 +63,8 @@ class TeamController(object):
 		except:
 			output['result'] = 'error'
 			output['message'] = 'could not retrieve team information'
+		if output['id'] == None:
+			output = {'result': 'error', 'message': 'could not retrieve team information'}
 		return json.dumps(output)
 	
 	def PUT(self, team_name):
