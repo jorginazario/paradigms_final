@@ -1,6 +1,7 @@
 import cherrypy
 import re, json
 
+#This controller is needed to handle any request having to do with team stats
 class TeamController(object):
 	def __init__(self, tdb=None):
 		self.tdb = tdb

@@ -1,6 +1,7 @@
 import cherrypy
 import re, json
 
+#this controller is needed to handle all the recommendations requests
 class RecommendationsController(object):
 	def __init__(self, tdb=None):
 		self.tdb = tdb

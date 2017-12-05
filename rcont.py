@@ -1,6 +1,7 @@
 import cherrypy
 import re, json
 
+#This controller is needed to handle RESET requests
 class ResetController(object):
 	def __init__(self, tdb=None):
 		self.tdb = tdb
