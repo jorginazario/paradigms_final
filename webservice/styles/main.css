@@ -1,0 +1,29 @@
+* {
+	box-sizing: border-box;
+}
+
+.container {
+	display: flex;
+	align-items: center;
+}
+
+.options {
+	flex: 1;
+	width: 100px;
+	text-align: center;
+}
+
+.data {
+	flex: 1;
+	width: 100px;
+	text-align: center;
+}
+
+#main {
+	max-width: 600px;
+	margin: 0 auto;
+}
+
+body {
+	background-color: lightblue;
+}
