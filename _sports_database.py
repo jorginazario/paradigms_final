@@ -101,10 +101,10 @@ class _sports_database:
 	
 	# GETS #
 	def get_valid_teams(self):
-		return list(self.ranked.keys())
+		return sorted(list(self.ranked.keys()))
 
 	def get_invalid_teams(self):
-		return list(self.unranked)
+		return sorted(list(self.unranked))
 
 	def get_team_name(self, team_id):
 		if int(team_id) in self.team_ids:
