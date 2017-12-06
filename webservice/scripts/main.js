@@ -45,12 +45,32 @@ function Button() {
 }
 
 function Input(){
-	this.createTextbox = function(text, id){
+	this.createInput = function(id){
 		this.item = document.createElement("input");
 		this.item.setAttribute("list", id);
+	},
+	this.addToDocument = function() {
+		document.body.appendChild(this.item);
 	}
-	this.addToContainer = function(element) {
+}
+
+function Datalist(){
+	this.createDatalist = function(id){
+		this.item = document.createElement("datalist");
+		this.item.setAttribute("id", id);
+	},
+	this.addToDatalist = function(element) {
 		this.item.appendChild(element);
+	},
+	this.addToDocument = function() {
+		document.body.appendChild(this.item);
+	}
+}
+
+function Option(){
+	this.createOption = function(value){
+		this.item = document.createElement("option");
+		this.item.setAttribute("value", value);
 	},
 	this.addToDocument = function() {
 		document.body.appendChild(this.item);
@@ -180,6 +200,38 @@ function show_stats(tempContainer){
 	statsLabel.createLabel("Explore Stats:", "stats_label");
 	statsLabel.item.innerHTML = statsLabel.item.innerHTML.bold();
 	dataContainer.addToContainer(statsLabel.item);
+
+	//input
+	myInput = new Input();
+	myInput.createInput("teams");
+
+	//datalist
+	myDatalist = new Datalist();
+	myDatalist.createDatalist("teams");
+
+	dataContainer.addToContainer(myInput.item);
+
+	var xhr = new XMLHttpRequest();
+	xhr.open("GET", "http://student04.cse.nd.edu:" + MOVIE_PORT + "/valid/", true);
+	xhr.onload = function(e) {
+		validTeamsResponse = JSON.parse(xhr.responseText);
+		validTeams = validTeamsResponse["teams"];
+		for (var i = 0; i < validTeams.length; i++) {
+			//options go inside datalist
+			myOption1 = new Option;
+			myOption1.createOption(validTeams[i]);
+			myDatalist.addToDatalist(myOption1.item);
+
+		}
+	}
+	xhr.onerror = function(e) {
+		console.error(xhr.statusText);
+	}
+	xhr.send(null)
+
+	dataContainer.addToContainer(myDatalist.item);
+
+
 }
 
 //Event Handler: Show Match
@@ -187,6 +239,8 @@ function show_match(tempContainer){
 	while (tempContainer.firstChild) {
 		tempContainer.removeChild(tempContainer.firstChild)
 	}
+
+
 
 	matchupLabel = new Label();
 	matchupLabel.createLabel("Team Match Up:", "matchup_label");
