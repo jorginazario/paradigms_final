@@ -23,12 +23,12 @@ class TestTeams(unittest.TestCase):
 
     def test_rankings_get(self):
         self.reset_data()
-        team_name = 'Man City'
+        team_name = 'Liverpool'
         r = requests.get(self.RANKINGS_URL + str(team_name))
         self.assertTrue(self.is_json(r.content.decode('utf-8')))
         resp = json.loads(r.content.decode('utf-8'))
         self.assertEqual(resp['result'], 'success')
-        self.assertEqual(resp['ranking'], 1)
+        self.assertEqual(resp['ranking'], 2)
 
 if __name__ == "__main__":
     unittest.main()

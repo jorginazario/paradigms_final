@@ -21,27 +21,17 @@ class _sports_database:
 
 	# RECOMMENDATION of Match Winner#
 	def load_rank(self):
-		priority_queue = []
+		orderOfRankings = []
 		for team_name in self.teams:
 			if self.teams[team_name] not in self.data:
 				self.unranked.add(team_name)
 			else:
 				wins = self.get_team_wins(team_name)
 				losses = self.get_team_losses(team_name)
-				win_loss_ratio = wins / losses
-				priority_queue.append((win_loss_ratio, team_name))
-		orderOfRankings = []
-		while len(priority_queue) > 0:
-			newTeam = priority_queue.pop()
-			if len(orderOfRankings) == 0:
-				orderOfRankings.append(newTeam)
-			else:
-				newIndex = 0			
-				while newTeam[0] < orderOfRankings[newIndex][0] and newIndex < len(orderOfRankings) - 1:
-					newIndex += 1
-				orderOfRankings.insert(newIndex, newTeam)
+				win_loss_ratio = float(wins) / float(losses)
+				orderOfRankings.append((win_loss_ratio, team_name))
 
-		for index, team in enumerate(orderOfRankings):
+		for index, team in enumerate(sorted(orderOfRankings, reverse=True)):
 			self.ranked[team[1]] = index + 1
 
 
@@ -170,6 +160,8 @@ class _sports_database:
 		self.data[int(team_id)]["D"] = int(fullDataList[3])
 		self.data[int(team_id)]["SFor"] = int(fullDataList[4])
 		self.data[int(team_id)]["SAgainst"] = int(fullDataList[5])
+		self.load_rank()
+
 
 	def set_team_wins(self, teamName, wins):
 		self.data[self.get_team_id(teamName)]["W"] = int(wins)

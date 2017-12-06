@@ -13,6 +13,7 @@ class ResetController(object):
 			the_body = json.loads(the_body)
 			self.tdb.load_teams('data_files/teams1.csv')
 			self.tdb.load_data('data_files/1-premierleague.csv')
+			self.tdb.load_rank()
 		except:
 			output['result'] = 'error'
 			output['message'] = 'could not recreate database from .csv files'

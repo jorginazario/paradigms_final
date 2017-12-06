@@ -17,8 +17,8 @@ class TestSportsDatabase(unittest.TestCase):
 	
 	def test_match(self):
 		self.reset_data()
-		winner = self.tdb.match("Arsenal_Aston Villa")
-		self.assertEqual(winner, "Arsenal")
+		winner = self.tdb.match("Liverpool_Aston Villa")
+		self.assertEqual(winner, "Liverpool")
 		winner = self.tdb.match("Man United_Fulham")
 		self.assertEqual(winner, "Man United")
 	

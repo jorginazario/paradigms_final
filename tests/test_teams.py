@@ -58,6 +58,7 @@ class TestTeams(unittest.TestCase):
         self.assertEqual(resp['draws'], int(m['D']))
         self.assertEqual(resp['scoresFor'], int(m['SFor']))
         self.assertEqual(resp['scoresAgainst'], int(m['SAgainst']))
+        self.reset_data()
 
     def test_teams_delete(self):
         self.reset_data()

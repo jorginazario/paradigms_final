@@ -16,7 +16,12 @@ class TestReset(unittest.TestCase):
         except ValueError:
             return False
 
+    def reset_data(self):
+        m = {}
+        r = requests.put(self.RESET_URL, data = json.dumps(m))
+
     def test_reset_data(self):
+        self.reset_data()
         m = {}
         r = requests.put(self.RESET_URL)
 
