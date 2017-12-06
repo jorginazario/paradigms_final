@@ -16,7 +16,9 @@
 .data {
 	flex: 1;
 	width: 100px;
+	height: 580px;
 	text-align: center;
+	overflow: scroll;
 }
 
 .btn {

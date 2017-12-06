@@ -44,13 +44,6 @@ function Button() {
 	}
 }
 
-function removeElement(elementId) {
-    // Removes an element from the document
-    var element = document.getElementById(elementId);
-    element.parentNode.removeChild(element);
-}
-
-
 // MOVIE PORT NUMBER //
 var MOVIE_PORT = "51019";
 ///////////////////////
@@ -181,7 +174,7 @@ function show_match(tempContainer){
 	while (tempContainer.firstChild) {
 		tempContainer.removeChild(tempContainer.firstChild)
 	}
-
+	
 	matchupLabel = new Label();
 	matchupLabel.createLabel("Team Match Up:", "matchup_label");
 	matchupLabel.item.innerHTML = matchupLabel.item.innerHTML.bold();
