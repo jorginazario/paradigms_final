@@ -36,39 +36,19 @@ function Button() {
 		this.item.setAttribute("id", id);
 		this.item.innerHTML = text;
 	},
-	this.addVoteHandler = function(handler, image, movieInfoTable) {
+	this.addEventHandler = function(handler) {
 		this.item.onmouseup = function() {
-			handler(image, movieInfoTable);
+			handler();
 		}
-	}
-}	
-
-function RadioButton() {
-	this.createRadioButton = function(name, labels, id) {
-		this.item = document.createElement("form")
-		this.name = name
-		for (var x in labels) {
-			var lx = labels[x]
-			var tmp = document.createElement("input")
-			tmp.setAttribute("type", "radio")
-			tmp.setAttribute("name", name)
-			tmp.setAttribute("value", lx)
-			var ltmp = document.createElement("label")
-			ltmp.setAttribute("id", id+"_label_"+x)
-			ltmp.innerHTML = labels[x] + '<br>'
-			this.item.appendChild(tmp)
-			this.item.appendChild(ltmp)
-		}
-	},
-	this.getValue = function() {
-		var radios = this.item.elements[this.name]
-		for (var i = 0; i < radios.length; i++) {
-			var r = radios[i]
-			if (r.checked) return r.value
-		}
-		return 'error'
 	}
 }
+
+function removeElement(elementId) {
+    // Removes an element from the document
+    var element = document.getElementById(elementId);
+    element.parentNode.removeChild(element);
+}
+
 
 // MOVIE PORT NUMBER //
 var MOVIE_PORT = "51019";
@@ -114,11 +94,65 @@ function getMovieRecommendation(user_id, image, movieInfoTable) {
 	xhr.send(null);
 }
 
+//Server Request Handler 
+function get_valid_teams(){
+	var xhr = new XMLHttpRequest();
+	xhr.open("GET", "http://student04.cse.nd.edu:" + MOVIE_PORT + "/teams/", true); //need to edit resource to return valid teams
+																					//also need to add the changes to the cherrypy
+	xhr.onload = function(e) {
+		valid_teams_dict = JSON.parse(xhr.responseText);
+		for (var key in valid_teams_dict){
+			valid_label = new Label();
+			valid_label.createLabel("Valid Teams:", "valid_label");
+			dataContainer.addToContainer(valid_label.item);
+		}
+
+	}
+	xhr.onerror = function(e) {
+		console.error(xhr.statusText);
+	}
+	xhr.send(null)
+}
+
+
+//Event Handler: Show Teams
+function show_teams(){
+	var childDivs = document.getElementById("data").getElementsByTagName("p");
+	for( var i=0; i< childDivs.length; i++ ){
+ 		var childDiv = childDivs[i];
+ 		console.log(childDiv)
+ 	}
+
+	valid_label = new Label();
+	valid_label.createLabel("Valid Teams:", "valid_label");
+	dataContainer.addToContainer(valid_label.item);
+	
+	//call get_valid_teams and this returns a dictionary
+
+	invalid_label = new Label();
+	invalid_label.createLabel("Invalid Teams:", "invalid_label");
+	dataContainer.addToContainer(invalid_label.item);
+}
+
+//Event Handler: Show Ranking
+function show_ranking(){
+	ranking_label = new Label();
+	ranking_label.createLabel("Ranking:", "ranking_label");
+	dataContainer.addToContainer(ranking_label.item);
+}
+
+//Event Handler: Show Stats
+function show_stats(){
+}
+
+//Event Handler: Show Match
+function show_match(){
+}
 
 // main div
 mainContainer = new Container();
 mainContainer.createContainer("container");
-mainContainer.addID("main");
+mainContainer.addID("main_container");
 mainContainer.addToDocument();
 
 // options div
@@ -131,10 +165,35 @@ optionsLabel = new Label();
 optionsLabel.createLabel("Choose option:", "options_label");
 optionsContainer.addToContainer(optionsLabel.item);
 
+//options buttons
+optionsButton1 = new Button;
+optionsButton1.createButton("Show all teams", "teams_button");
+optionsContainer.addToContainer(optionsButton1.item);
+
+optionsButton2 = new Button;
+optionsButton2.createButton("Show rankings", "rankings_button");
+optionsContainer.addToContainer(optionsButton2.item);
+
+optionsButton3 = new Button;
+optionsButton3.createButton("Explore team stats", "stats_button");
+optionsContainer.addToContainer(optionsButton3.item);
+
+optionsButton4 = new Button;
+optionsButton4.createButton("Team match up", "match_button");
+optionsContainer.addToContainer(optionsButton4.item);
+
+//button event handlers
+optionsButton1.addEventHandler(show_teams);
+optionsButton2.addEventHandler(show_ranking);
+optionsButton3.addEventHandler(show_stats);
+optionsButton4.addEventHandler(show_match);
+
+
 // options radio button
-optionsRadioButton = new RadioButton();
-optionsRadioButton.createRadioButton("choice", ["Show all teams", "Show rankings", "Explore team stats", "Team match up"], "theOptionsRadioButton")
-optionsContainer.addToContainer(optionsRadioButton.item)
+//optionsRadioButton = new RadioButton();
+//optionsRadioButton.createRadioButton("choice", ["Show all teams", "Show rankings", "Explore team stats", "Team match up"], "theOptionsRadioButton")
+//optionsContainer.addToContainer(optionsRadioButton.item)
+//optionsRadioButton.getValue()
 
 // data div
 dataContainer = new Container();
@@ -145,3 +204,5 @@ mainContainer.addToContainer(dataContainer.item);
 dataLabel= new Label();
 dataLabel.createLabel("Data:", "data_label");
 dataContainer.addToContainer(dataLabel.item);
+
+
