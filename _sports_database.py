@@ -44,7 +44,6 @@ class _sports_database:
 		for index, team in enumerate(orderOfRankings):
 			self.ranked[team[1]] = index + 1
 
-		print(self.ranked)
 
 	def match(self, two_teams):
 		two_teams = two_teams.split("_")
