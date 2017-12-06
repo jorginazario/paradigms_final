@@ -30,6 +30,17 @@ function Container() {
 	}
 }
 
+function Header() {
+	this.createHeader = function(text) {
+		this.item = document.createElement("h1");
+		var textLabel = document.createTextNode(text);
+		this.item.appendChild(textLabel);
+	},
+	this.addToDocument = function() {
+		document.body.appendChild(this.item);
+	}
+}
+
 function Button() {
 	this.createButton = function(text, id, className) {
 		this.item = document.createElement("button");
@@ -165,6 +176,7 @@ function show_invalid_teams(tempContainer) {
 	xhr.onload = function(e) {
 		invalidTeamsResponse = JSON.parse(xhr.responseText);
 		invalidTeams = invalidTeamsResponse["teams"];
+		console.log(invalidTeams)
 		for (var i = 0; i < invalidTeams.length; i++) {
 			tempLabel = new Label();
 			tempLabel.createLabel(invalidTeams[i], "invalid_teams_label");
@@ -183,6 +195,48 @@ function show_ranking(tempContainer){
 	while (tempContainer.firstChild) {
 		tempContainer.removeChild(tempContainer.firstChild)
 	}
+
+	rankingLabel = new Label();
+	rankingLabel.createLabel("Ranking Teams:", "ranking_label");
+	rankingLabel.item.innerHTML = rankingLabel.item.innerHTML.bold();
+	dataContainer.addToContainer(rankingLabel.item);
+
+	var xhr = new XMLHttpRequest();
+	xhr.open("GET", "http://student04.cse.nd.edu:" + MOVIE_PORT + "/rankings/", true);
+	xhr.onload = function(e) {
+		rankingTeamsResponse = JSON.parse(xhr.responseText);
+		rankingTeams = rankingTeamsResponse["teams"];
+		for (i in rankingTeams) {
+			team = rankingTeams[i];
+			for (teamName in team) {
+				console.log(teamName);
+				tempLabel = new Label();
+				tempLabel.createLabel(team[teamName] + "." + "\t" + teamName, "ranking_teams_label");
+				dataContainer.addToContainer(tempLabel.item)
+			}
+			/*
+			for (x in i) {
+				tempLabel = new Label();
+
+				tempLabel.createLabel(x + "\t" + i[x], "ranking_teams_label");
+				dataContainer.addToContainer(tempLabel.item)
+			} */
+			/*
+			counter = i + 1
+			line_number = String(counter)
+			line_number = line_number + ". "
+			tempLabel = new Label();
+			tempLabel.createLabel(line_number + rankingTeams[i], "ranking_teams_label");
+			dataContainer.addToContainer(tempLabel.item) */
+		}
+	}
+	xhr.onerror = function(e) {
+		console.error(xhr.statusText);
+	}
+	xhr.send(null)
+
+
+
 
 	rankingLabel = new Label();
 	rankingLabel.createLabel("Ranking:", "ranking_label");
@@ -265,17 +319,18 @@ dataContainer.createContainer("data");
 mainContainer.addToContainer(dataContainer.item);
 
 // options label
-optionsLabel = new Label();
-optionsLabel.createLabel("Choose option:", "options_label");
-optionsContainer.addToContainer(optionsLabel.item);
+optionsHeader = new Header();
+optionsHeader.createHeader("Choose option:");
+
+optionsContainer.addToContainer(optionsHeader.item);
 
 //options buttons
 optionsButton1 = new Button();
-optionsButton1.createButton("Valid teams", "valid_teams_button", "btn");
+optionsButton1.createButton("Premiere League Teams 2017", "valid_teams_button", "btn");
 optionsContainer.addToContainer(optionsButton1.item);
 
 optionsButton2 = new Button();
-optionsButton2.createButton("Invalid teams", "invalid_teams_button", "btn");
+optionsButton2.createButton("Explore Past Premier League Teams", "invalid_teams_button", "btn");
 optionsContainer.addToContainer(optionsButton2.item);
 
 optionsButton3 = new Button();
