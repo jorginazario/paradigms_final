@@ -31,9 +31,10 @@ function Container() {
 }
 
 function Button() {
-	this.createButton = function(text, id) {
+	this.createButton = function(text, id, className) {
 		this.item = document.createElement("button");
 		this.item.setAttribute("id", id);
+		this.item.setAttribute("class", className);
 		this.item.innerHTML = text;
 	},
 	this.addEventHandler = function(handler, tempContainer) {
@@ -210,23 +211,23 @@ optionsContainer.addToContainer(optionsLabel.item);
 
 //options buttons
 optionsButton1 = new Button();
-optionsButton1.createButton("Valid teams", "valid_teams_button");
+optionsButton1.createButton("Valid teams", "valid_teams_button", "btn");
 optionsContainer.addToContainer(optionsButton1.item);
 
 optionsButton2 = new Button();
-optionsButton2.createButton("Invalid teams", "invalid_teams_button");
+optionsButton2.createButton("Invalid teams", "invalid_teams_button", "btn");
 optionsContainer.addToContainer(optionsButton2.item);
 
 optionsButton3 = new Button();
-optionsButton3.createButton("Show rankings", "rankings_button");
+optionsButton3.createButton("Show rankings", "rankings_button", "btn");
 optionsContainer.addToContainer(optionsButton3.item);
 
 optionsButton4 = new Button();
-optionsButton4.createButton("Explore team stats", "stats_button");
+optionsButton4.createButton("Explore team stats", "stats_button", "btn");
 optionsContainer.addToContainer(optionsButton4.item);
 
 optionsButton5 = new Button();
-optionsButton5.createButton("Team match up", "match_button");
+optionsButton5.createButton("Team match up", "match_button", "btn");
 optionsContainer.addToContainer(optionsButton5.item);
 
 //button event handlers
