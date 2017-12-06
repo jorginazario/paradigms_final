@@ -53,6 +53,11 @@ function Button() {
 			handler(tempContainer);
 		}
 	}
+	this.addEventHandler2 = function(handler, tempContainer, tempTextBox) {
+		this.item.onmouseup = function() {
+			handler(tempContainer, tempTextBox);
+		}
+	}
 }
 
 function Input(){
@@ -63,6 +68,7 @@ function Input(){
 	this.addToDocument = function() {
 		document.body.appendChild(this.item);
 	}
+
 }
 
 function Datalist(){
@@ -176,7 +182,6 @@ function show_invalid_teams(tempContainer) {
 	xhr.onload = function(e) {
 		invalidTeamsResponse = JSON.parse(xhr.responseText);
 		invalidTeams = invalidTeamsResponse["teams"];
-		console.log(invalidTeams)
 		for (var i = 0; i < invalidTeams.length; i++) {
 			tempLabel = new Label();
 			tempLabel.createLabel(invalidTeams[i], "invalid_teams_label");
@@ -196,11 +201,6 @@ function show_ranking(tempContainer){
 		tempContainer.removeChild(tempContainer.firstChild)
 	}
 
-	rankingLabel = new Label();
-	rankingLabel.createLabel("Ranking Teams:", "ranking_label");
-	rankingLabel.item.innerHTML = rankingLabel.item.innerHTML.bold();
-	dataContainer.addToContainer(rankingLabel.item);
-
 	var xhr = new XMLHttpRequest();
 	xhr.open("GET", "http://student04.cse.nd.edu:" + MOVIE_PORT + "/rankings/", true);
 	xhr.onload = function(e) {
@@ -209,34 +209,16 @@ function show_ranking(tempContainer){
 		for (i in rankingTeams) {
 			team = rankingTeams[i];
 			for (teamName in team) {
-				console.log(teamName);
 				tempLabel = new Label();
 				tempLabel.createLabel(team[teamName] + "." + "\t" + teamName, "ranking_teams_label");
 				dataContainer.addToContainer(tempLabel.item)
 			}
-			/*
-			for (x in i) {
-				tempLabel = new Label();
-
-				tempLabel.createLabel(x + "\t" + i[x], "ranking_teams_label");
-				dataContainer.addToContainer(tempLabel.item)
-			} */
-			/*
-			counter = i + 1
-			line_number = String(counter)
-			line_number = line_number + ". "
-			tempLabel = new Label();
-			tempLabel.createLabel(line_number + rankingTeams[i], "ranking_teams_label");
-			dataContainer.addToContainer(tempLabel.item) */
 		}
 	}
 	xhr.onerror = function(e) {
 		console.error(xhr.statusText);
 	}
 	xhr.send(null)
-
-
-
 
 	rankingLabel = new Label();
 	rankingLabel.createLabel("Ranking:", "ranking_label");
@@ -251,7 +233,7 @@ function show_stats(tempContainer){
 	}
 
 	statsLabel = new Label();
-	statsLabel.createLabel("Explore Stats:", "stats_label");
+	statsLabel.createLabel("Explore Team Statistics:", "stats_label");
 	statsLabel.item.innerHTML = statsLabel.item.innerHTML.bold();
 	dataContainer.addToContainer(statsLabel.item);
 
@@ -282,9 +264,66 @@ function show_stats(tempContainer){
 		console.error(xhr.statusText);
 	}
 	xhr.send(null)
-
 	dataContainer.addToContainer(myDatalist.item);
 
+	//Create search Button
+	searchButton = new Button();
+	searchButton.createButton("Search", "search_button", "btn");
+	dataContainer.addToContainer(searchButton.item);
+
+	//add event handler
+	searchButton.addEventHandler2(more_stats, dataContainer.item, myInput.item);
+
+}
+
+//Event Handler: Show More Stats (Wins, Losses, Draws) when a team is selected in the textbox
+function more_stats(tempContainer, tempTextBox){
+	//!!!!!STILL NEED TO DELETE THE PREVIOUS VALUES
+	//for (var i = 0; i < myStatsList.length; i++) {
+	//	var elem = document.getElementById(myStatsList);
+	//	elem.parentNode.removeChild(elem);
+	//}
+
+	///////////////////////////
+	var xhr = new XMLHttpRequest();
+	xhr.open("GET", "http://student04.cse.nd.edu:" + MOVIE_PORT + "/teams/" + tempTextBox.value, true);
+	xhr.onload = function(e) {
+		stats = JSON.parse(xhr.responseText);
+		wins = stats["wins"];
+		losses = stats["losses"];
+		draws = stats["draws"];
+		scoresFor = stats["scoresFor"]; 
+		scoresAgainst = stats["scoresAgainst"];
+		name = stats["name"];
+
+		myStatsList = [];
+		myStatsList.push(wins);
+		myStatsList.push(losses);
+		myStatsList.push(draws);
+		myStatsList.push(scoresFor);
+		myStatsList.push(scoresAgainst);
+
+		myStatsListKeys = [];
+		myStatsListKeys.push("Wins: ");
+		myStatsListKeys.push("Lossess: ");
+		myStatsListKeys.push("Draws: ");
+		myStatsListKeys.push("Total Goals Scored: ");
+		myStatsListKeys.push("Total Goals Allowed: ");
+
+		console.log(myStatsList)
+
+		for (var i = 0; i < myStatsList.length; i++) {
+			//options go inside datalist
+			tempLabel = new Label();
+			tempLabel.createLabel(myStatsListKeys[i]+myStatsList[i], myStatsList[i]+"_stats_label_" + i);
+			dataContainer.addToContainer(tempLabel.item);
+		}
+	}
+	xhr.onerror = function(e) {
+		console.error(xhr.statusText);
+	}
+	xhr.send(null)
+	
 
 }
 
@@ -293,9 +332,6 @@ function show_match(tempContainer){
 	while (tempContainer.firstChild) {
 		tempContainer.removeChild(tempContainer.firstChild)
 	}
-
-
-
 	matchupLabel = new Label();
 	matchupLabel.createLabel("Team Match Up:", "matchup_label");
 	matchupLabel.item.innerHTML = matchupLabel.item.innerHTML.bold();
@@ -351,7 +387,6 @@ optionsButton2.addEventHandler(show_invalid_teams, dataContainer.item);
 optionsButton3.addEventHandler(show_ranking, dataContainer.item);
 optionsButton4.addEventHandler(show_stats, dataContainer.item);
 optionsButton5.addEventHandler(show_match, dataContainer.item);
-
 
 // options radio button
 //optionsRadioButton = new RadioButton();
