@@ -94,19 +94,27 @@ function getMovieRecommendation(user_id, image, movieInfoTable) {
 	xhr.send(null);
 }
 
-//Server Request Handler 
-function get_valid_teams(){
-	var xhr = new XMLHttpRequest();
-	xhr.open("GET", "http://student04.cse.nd.edu:" + MOVIE_PORT + "/teams/", true); //need to edit resource to return valid teams
-																					//also need to add the changes to the cherrypy
-	xhr.onload = function(e) {
-		valid_teams_dict = JSON.parse(xhr.responseText);
-		for (var key in valid_teams_dict){
-			valid_label = new Label();
-			valid_label.createLabel("Valid Teams:", "valid_label");
-			dataContainer.addToContainer(valid_label.item);
-		}
+//Event Handler: Show Valid Teams
+function show_valid_teams(tempContainer){
+	while (tempContainer.firstChild) {
+		tempContainer.removeChild(tempContainer.firstChild)
+	}
 
+	validLabel = new Label();
+	validLabel.createLabel("Valid Teams:", "valid_label");
+	validLabel.item.innerHTML = validLabel.item.innerHTML.bold();
+	dataContainer.addToContainer(validLabel.item);
+
+	var xhr = new XMLHttpRequest();
+	xhr.open("GET", "http://student04.cse.nd.edu:" + MOVIE_PORT + "/valid/", true);
+	xhr.onload = function(e) {
+		validTeamsResponse = JSON.parse(xhr.responseText);
+		validTeams = validTeamsResponse["teams"];
+		for (var i = 0; i < validTeams.length; i++) {
+			tempLabel = new Label();
+			tempLabel.createLabel(validTeams[i], "valid_teams_label");
+			dataContainer.addToContainer(tempLabel.item)
+		}
 	}
 	xhr.onerror = function(e) {
 		console.error(xhr.statusText);
@@ -114,22 +122,33 @@ function get_valid_teams(){
 	xhr.send(null)
 }
 
-
-//Event Handler: Show Teams
-function show_teams(tempContainer){
+//Event Handler: Show Invalid Teams
+function show_invalid_teams(tempContainer) {
 	while (tempContainer.firstChild) {
 		tempContainer.removeChild(tempContainer.firstChild)
 	}
 
-	valid_label = new Label();
-	valid_label.createLabel("Valid Teams:", "valid_label");
-	dataContainer.addToContainer(valid_label.item);
-	
-	//call get_valid_teams and this returns a dictionary
+	invalidLabel = new Label();
+	invalidLabel.createLabel("Invalid Teams:", "invalid_label");
+	invalidLabel.item.innerHTML = invalidLabel.item.innerHTML.bold();
+	dataContainer.addToContainer(invalidLabel.item);
 
-	invalid_label = new Label();
-	invalid_label.createLabel("Invalid Teams:", "invalid_label");
-	dataContainer.addToContainer(invalid_label.item);
+	var xhr = new XMLHttpRequest();
+	xhr.open("GET", "http://student04.cse.nd.edu:" + MOVIE_PORT + "/invalid/", true);
+	xhr.onload = function(e) {
+		invalidTeamsResponse = JSON.parse(xhr.responseText);
+		invalidTeams = invalidTeamsResponse["teams"];
+		for (var i = 0; i < invalidTeams.length; i++) {
+			tempLabel = new Label();
+			tempLabel.createLabel(invalidTeams[i], "invalid_teams_label");
+			dataContainer.addToContainer(tempLabel.item)
+		}
+	}
+	xhr.onerror = function(e) {
+		console.error(xhr.statusText);
+	}
+	xhr.send(null)
+
 }
 
 //Event Handler: Show Ranking
@@ -137,8 +156,10 @@ function show_ranking(tempContainer){
 	while (tempContainer.firstChild) {
 		tempContainer.removeChild(tempContainer.firstChild)
 	}
+
 	rankingLabel = new Label();
 	rankingLabel.createLabel("Ranking:", "ranking_label");
+	rankingLabel.item.innerHTML = rankingLabel.item.innerHTML.bold();
 	dataContainer.addToContainer(rankingLabel.item);
 }
 
@@ -147,8 +168,10 @@ function show_stats(tempContainer){
 	while (tempContainer.firstChild) {
 		tempContainer.removeChild(tempContainer.firstChild)
 	}
+
 	statsLabel = new Label();
 	statsLabel.createLabel("Explore Stats:", "stats_label");
+	statsLabel.item.innerHTML = statsLabel.item.innerHTML.bold();
 	dataContainer.addToContainer(statsLabel.item);
 }
 
@@ -157,8 +180,10 @@ function show_match(tempContainer){
 	while (tempContainer.firstChild) {
 		tempContainer.removeChild(tempContainer.firstChild)
 	}
+
 	matchupLabel = new Label();
 	matchupLabel.createLabel("Team Match Up:", "matchup_label");
+	matchupLabel.item.innerHTML = matchupLabel.item.innerHTML.bold();
 	dataContainer.addToContainer(matchupLabel.item);
 }
 
@@ -184,27 +209,32 @@ optionsLabel.createLabel("Choose option:", "options_label");
 optionsContainer.addToContainer(optionsLabel.item);
 
 //options buttons
-optionsButton1 = new Button;
-optionsButton1.createButton("Show all teams", "teams_button");
+optionsButton1 = new Button();
+optionsButton1.createButton("Valid teams", "valid_teams_button");
 optionsContainer.addToContainer(optionsButton1.item);
 
-optionsButton2 = new Button;
-optionsButton2.createButton("Show rankings", "rankings_button");
+optionsButton2 = new Button();
+optionsButton2.createButton("Invalid teams", "invalid_teams_button");
 optionsContainer.addToContainer(optionsButton2.item);
 
-optionsButton3 = new Button;
-optionsButton3.createButton("Explore team stats", "stats_button");
+optionsButton3 = new Button();
+optionsButton3.createButton("Show rankings", "rankings_button");
 optionsContainer.addToContainer(optionsButton3.item);
 
-optionsButton4 = new Button;
-optionsButton4.createButton("Team match up", "match_button");
+optionsButton4 = new Button();
+optionsButton4.createButton("Explore team stats", "stats_button");
 optionsContainer.addToContainer(optionsButton4.item);
 
+optionsButton5 = new Button();
+optionsButton5.createButton("Team match up", "match_button");
+optionsContainer.addToContainer(optionsButton5.item);
+
 //button event handlers
-optionsButton1.addEventHandler(show_teams, dataContainer.item);
-optionsButton2.addEventHandler(show_ranking, dataContainer.item);
-optionsButton3.addEventHandler(show_stats, dataContainer.item);
-optionsButton4.addEventHandler(show_match, dataContainer.item);
+optionsButton1.addEventHandler(show_valid_teams, dataContainer.item);
+optionsButton2.addEventHandler(show_invalid_teams, dataContainer.item);
+optionsButton3.addEventHandler(show_ranking, dataContainer.item);
+optionsButton4.addEventHandler(show_stats, dataContainer.item);
+optionsButton5.addEventHandler(show_match, dataContainer.item);
 
 
 // options radio button

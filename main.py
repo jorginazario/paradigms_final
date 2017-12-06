@@ -4,6 +4,8 @@ from rcont import ResetController
 from ocont import OptionsController
 from rankcont import RankingsController
 from reccont import RecommendationsController
+from validcont import ValidController
+from invalidcont import InvalidController
 from _sports_database import _sports_database
 
 
@@ -28,14 +30,34 @@ def start_service():
 	resetController = ResetController(tdb=tdb)
 	rankingsController = RankingsController(tdb=tdb)
 	recommendationsController = RecommendationsController(tdb=tdb)
+	validController = ValidController(tdb=tdb)
+	invalidController = InvalidController(tdb=tdb)
 	optionsController = OptionsController()
+
+	# for /valid/
+	dispatcher.connect('full_valid_get', '/valid/',
+		controller = validController,
+		action = 'FULL_GET', conditions = dict(method=['GET']))
+
+	dispatcher.connect('full_valid_options', '/valid/',
+		controller = optionsController,
+		action = 'OPTIONS', conditions = dict(method=['OPTIONS']))
+
+	# for /invalid/
+	dispatcher.connect('full_invalid_get', '/invalid/',
+		controller = invalidController,
+		action = 'FULL_GET', conditions = dict(method=['GET']))
+
+	dispatcher.connect('full_invalid_options', '/invalid/',
+		controller = optionsController,
+		action = 'OPTIONS', conditions = dict(method=['OPTIONS']))
 
 	# for /recommendations/
 	dispatcher.connect('full_recommendations_get', '/recommendations/',
 		controller = recommendationsController,
 		action = 'FULL_GET', conditions = dict(method=['GET']))
 
-	dispatcher.connect('full_recommendations_options', '/recommendatoins/',
+	dispatcher.connect('full_recommendations_options', '/recommendations/',
 		controller = optionsController,
 		action = 'OPTIONS', conditions = dict(method=['OPTIONS']))
 

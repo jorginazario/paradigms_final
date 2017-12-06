@@ -101,11 +101,10 @@ class _sports_database:
 	
 	# GETS #
 	def get_valid_teams(self):
-		return self.ranked
+		return list(self.ranked.keys())
 
 	def get_invalid_teams(self):
-		return self.unranked
-	
+		return list(self.unranked)
 
 	def get_team_name(self, team_id):
 		if int(team_id) in self.team_ids:
@@ -264,4 +263,3 @@ if __name__ == "__main__":
 	tdb.load_teams('data_files/teams1.csv')
 	tdb.load_data('data_files/1-premierleague.csv')
 	tdb.load_rank()
-	#tdb.get_invalid_teams() #set(['teamname', team name'])
