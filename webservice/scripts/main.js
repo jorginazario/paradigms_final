@@ -43,6 +43,19 @@ function Button() {
 	}
 }
 
+function Input(){
+	this.createTextbox = function(text, id){
+		this.item = document.createElement("input");
+		this.item.setAttribute("list", id);
+	}
+	this.addToContainer = function(element) {
+		this.item.appendChild(element);
+	},
+	this.addToDocument = function() {
+		document.body.appendChild(this.item);
+	}
+}
+
 // MOVIE PORT NUMBER //
 var MOVIE_PORT = "51019";
 ///////////////////////
@@ -173,7 +186,7 @@ function show_match(tempContainer){
 	while (tempContainer.firstChild) {
 		tempContainer.removeChild(tempContainer.firstChild)
 	}
-	
+
 	matchupLabel = new Label();
 	matchupLabel.createLabel("Team Match Up:", "matchup_label");
 	matchupLabel.item.innerHTML = matchupLabel.item.innerHTML.bold();
