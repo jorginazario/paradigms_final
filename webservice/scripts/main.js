@@ -36,9 +36,9 @@ function Button() {
 		this.item.setAttribute("id", id);
 		this.item.innerHTML = text;
 	},
-	this.addEventHandler = function(handler) {
+	this.addEventHandler = function(handler, tempContainer) {
 		this.item.onmouseup = function() {
-			handler();
+			handler(tempContainer);
 		}
 	}
 }
@@ -116,12 +116,10 @@ function get_valid_teams(){
 
 
 //Event Handler: Show Teams
-function show_teams(){
-	var childDivs = document.getElementById("data").getElementsByTagName("p");
-	for( var i=0; i< childDivs.length; i++ ){
- 		var childDiv = childDivs[i];
- 		console.log(childDiv)
- 	}
+function show_teams(tempContainer){
+	while (tempContainer.firstChild) {
+		tempContainer.removeChild(tempContainer.firstChild)
+	}
 
 	valid_label = new Label();
 	valid_label.createLabel("Valid Teams:", "valid_label");
@@ -135,18 +133,33 @@ function show_teams(){
 }
 
 //Event Handler: Show Ranking
-function show_ranking(){
-	ranking_label = new Label();
-	ranking_label.createLabel("Ranking:", "ranking_label");
-	dataContainer.addToContainer(ranking_label.item);
+function show_ranking(tempContainer){
+	while (tempContainer.firstChild) {
+		tempContainer.removeChild(tempContainer.firstChild)
+	}
+	rankingLabel = new Label();
+	rankingLabel.createLabel("Ranking:", "ranking_label");
+	dataContainer.addToContainer(rankingLabel.item);
 }
 
 //Event Handler: Show Stats
-function show_stats(){
+function show_stats(tempContainer){
+	while (tempContainer.firstChild) {
+		tempContainer.removeChild(tempContainer.firstChild)
+	}
+	statsLabel = new Label();
+	statsLabel.createLabel("Explore Stats:", "stats_label");
+	dataContainer.addToContainer(statsLabel.item);
 }
 
 //Event Handler: Show Match
-function show_match(){
+function show_match(tempContainer){
+	while (tempContainer.firstChild) {
+		tempContainer.removeChild(tempContainer.firstChild)
+	}
+	matchupLabel = new Label();
+	matchupLabel.createLabel("Team Match Up:", "matchup_label");
+	dataContainer.addToContainer(matchupLabel.item);
 }
 
 // main div
@@ -159,6 +172,11 @@ mainContainer.addToDocument();
 optionsContainer = new Container();
 optionsContainer.createContainer("options");
 mainContainer.addToContainer(optionsContainer.item);
+
+// data div
+dataContainer = new Container();
+dataContainer.createContainer("data");
+mainContainer.addToContainer(dataContainer.item);
 
 // options label
 optionsLabel = new Label();
@@ -183,10 +201,10 @@ optionsButton4.createButton("Team match up", "match_button");
 optionsContainer.addToContainer(optionsButton4.item);
 
 //button event handlers
-optionsButton1.addEventHandler(show_teams);
-optionsButton2.addEventHandler(show_ranking);
-optionsButton3.addEventHandler(show_stats);
-optionsButton4.addEventHandler(show_match);
+optionsButton1.addEventHandler(show_teams, dataContainer.item);
+optionsButton2.addEventHandler(show_ranking, dataContainer.item);
+optionsButton3.addEventHandler(show_stats, dataContainer.item);
+optionsButton4.addEventHandler(show_match, dataContainer.item);
 
 
 // options radio button
@@ -194,15 +212,3 @@ optionsButton4.addEventHandler(show_match);
 //optionsRadioButton.createRadioButton("choice", ["Show all teams", "Show rankings", "Explore team stats", "Team match up"], "theOptionsRadioButton")
 //optionsContainer.addToContainer(optionsRadioButton.item)
 //optionsRadioButton.getValue()
-
-// data div
-dataContainer = new Container();
-dataContainer.createContainer("data");
-mainContainer.addToContainer(dataContainer.item);
-
-// data label ** this is for testing
-dataLabel= new Label();
-dataLabel.createLabel("Data:", "data_label");
-dataContainer.addToContainer(dataLabel.item);
-
-
