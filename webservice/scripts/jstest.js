@@ -16,3 +16,14 @@ function Container() {
 		document.body.setAttribute("role","alert"); //the class has to be "alert alert-primary"
 	}
 }
+
+function Input(){
+	this.createInput = function(id){
+		this.item = document.createElement("input");
+		this.item.setAttribute("list", id);
+	},
+	this.addToDocument = function() {
+		document.body.appendChild(this.item);
+	}
+	this
+}

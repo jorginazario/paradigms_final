@@ -74,6 +74,15 @@
 
 }
 
+#winner_title_label{
+  text-align: left;
+  margin-left: 70px;
+}
+
+#winner_label{
+  text-align: left;
+  margin-left: 70px;
+}
 
 #main {
 	max-width: 600px;

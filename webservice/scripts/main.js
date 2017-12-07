@@ -44,6 +44,17 @@ function Header() {
 	}
 }
 
+function Header3() {
+	this.createHeader = function(text) {
+		this.item = document.createElement("h3");
+		var textLabel = document.createTextNode(text);
+		this.item.appendChild(textLabel);
+	},
+	this.addToDocument = function() {
+		document.body.appendChild(this.item);
+	}
+}
+
 function Button() {
 	this.createButton = function(text, id, className) {
 		this.item = document.createElement("button");
@@ -157,10 +168,10 @@ function show_valid_teams(tempContainer){
 		tempContainer.removeChild(tempContainer.firstChild)
 	}
 
-	validLabel = new Label();
-	validLabel.createLabel("Premier League Teams:", "valid_label");
-	validLabel.item.innerHTML = validLabel.item.innerHTML.bold();
-	dataContainer.addToContainer(validLabel.item);
+	//Team matchup Data Label
+	leagueHeader = new Header3();
+	leagueHeader.createHeader("Premier League Teams:");
+	dataContainer.addToContainer(leagueHeader.item);
 
 	var xhr = new XMLHttpRequest();
 	xhr.open("GET", "http://student04.cse.nd.edu:" + SPORTS_PORT + "/valid/", true);
@@ -185,10 +196,10 @@ function show_invalid_teams(tempContainer) {
 		tempContainer.removeChild(tempContainer.firstChild)
 	}
 
-	invalidLabel = new Label();
-	invalidLabel.createLabel("Past Premier League Teams:", "invalid_label");
-	invalidLabel.item.innerHTML = invalidLabel.item.innerHTML.bold();
-	dataContainer.addToContainer(invalidLabel.item);
+	//Team matchup Data Label
+	pastHeader = new Header3();
+	pastHeader.createHeader("Past Premier League Teams:");
+	dataContainer.addToContainer(pastHeader.item);
 
 	var xhr = new XMLHttpRequest();
 	xhr.open("GET", "http://student04.cse.nd.edu:" + SPORTS_PORT + "/invalid/", true);
@@ -238,10 +249,10 @@ function show_ranking(tempContainer){
 	}
 	xhr.send(null)
 
-	rankingLabel = new Label();
-	rankingLabel.createLabel("Ranking:", "ranking_label");
-	rankingLabel.item.innerHTML = rankingLabel.item.innerHTML.bold();
-	dataContainer.addToContainer(rankingLabel.item);
+	//Team Ranking Data Label
+	rankingHeader = new Header3();
+	rankingHeader.createHeader("Ranking:");
+	dataContainer.addToContainer(rankingHeader.item);
 }
 
 //Event Handler: Show Stats
@@ -250,8 +261,13 @@ function show_stats(tempContainer){
 		tempContainer.removeChild(tempContainer.firstChild)
 	}
 
+	//Team Stats Data Label
+	statsHeader = new Header3();
+	statsHeader.createHeader("Explore Team Statistics");
+	dataContainer.addToContainer(statsHeader.item);
+
 	statsLabel = new Label();
-	statsLabel.createLabel("Explore Team Statistics:", "stats_label");
+	statsLabel.createLabel("Select or Type Team Name:", "stats_label");
 	statsLabel.item.innerHTML = statsLabel.item.innerHTML.bold();
 	dataContainer.addToContainer(statsLabel.item);
 
@@ -387,10 +403,10 @@ function show_match(tempContainer){
 	while (tempContainer.firstChild) {
 		tempContainer.removeChild(tempContainer.firstChild)
 	}
-	matchupLabel = new Label();
-	matchupLabel.createLabel("Team Match Up:", "matchup_label");
-	matchupLabel.item.innerHTML = matchupLabel.item.innerHTML.bold();
-	dataContainer.addToContainer(matchupLabel.item);
+	//Team matchup Data Label
+	teamMatchHeader = new Header3();
+	teamMatchHeader.createHeader("Team Match Up");
+	dataContainer.addToContainer(teamMatchHeader.item);
 
 	statsLabel = new Label();
 	statsLabel.createLabel("Team 1:", "team1_label");
@@ -581,10 +597,12 @@ function edit_team(tempContainer) {
 	while (tempContainer.firstChild) {
 		tempContainer.removeChild(tempContainer.firstChild)
 	}
-	matchupLabel = new Label();
-	matchupLabel.createLabel("Edit Team Data:", "edit_data_label");
-	matchupLabel.item.innerHTML = matchupLabel.item.innerHTML.bold();
-	dataContainer.addToContainer(matchupLabel.item);
+
+	//Modify Team Data Label
+	matchupHeader = new Header3();
+	matchupHeader.createHeader("Modify Team Data");
+	dataContainer.addToContainer(matchupHeader.item);
+
 
 	statsLabel = new Label();
 	statsLabel.createLabel("Team Name:", "team_name_label");
@@ -688,10 +706,10 @@ function add_new_team(tempContainer) {
 	while (tempContainer.firstChild) {
 		tempContainer.removeChild(tempContainer.firstChild)
 	}
-	matchupLabel = new Label();
-	matchupLabel.createLabel("Add a New Team:", "new_team_label");
-	matchupLabel.item.innerHTML = matchupLabel.item.innerHTML.bold();
-	dataContainer.addToContainer(matchupLabel.item);
+	//Modify Team Data Label
+	newHeader = new Header3();
+	newHeader.createHeader("Add New Team");
+	dataContainer.addToContainer(newHeader.item);
 
 	statsLabel = new Label();
 	statsLabel.createLabel("New Team Name:", "team_name_label");
@@ -795,22 +813,22 @@ optionsButton3.createButton("Show rankings", "rankings_button", "btn child");
 optionsContainer.addToContainer(optionsButton3.item);
 
 optionsButton4 = new Button();
-optionsButton4.createButton("Explore team stats", "stats_button", "btn child");
+optionsButton4.createButton("Explore Team Stats", "stats_button", "btn child");
 optionsContainer.addToContainer(optionsButton4.item);
 
 optionsButton5 = new Button();
-optionsButton5.createButton("Team match up", "match_button", "btn");
+optionsButton5.createButton("Team Match Up", "match_button", "btn");
 optionsContainer.addToContainer(optionsButton5.item);
 
 optionsButton6 = new Button();
-optionsButton6.createButton("Edit Team Data", "edit_teams_button", "btn");
+optionsButton6.createButton("Modify Team Data", "edit_teams_button", "btn");
 optionsContainer.addToContainer(optionsButton6.item);
 
 optionsButton7 = new Button();
 optionsButton7.createButton("Add New Team", "add_teams_button", "btn");
 optionsContainer.addToContainer(optionsButton7.item);
 
-//button event handlers
+//button event handlers 
 optionsButton1.addEventHandler(show_valid_teams, dataContainer.item);
 optionsButton2.addEventHandler(show_invalid_teams, dataContainer.item);
 optionsButton3.addEventHandler(show_ranking, dataContainer.item);
