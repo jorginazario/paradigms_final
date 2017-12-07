@@ -694,7 +694,6 @@ function save_edit_team_data(tempContainer, team_name_input, team_wins_input, te
 }
 
 function add_new_team(tempContainer) {
-	console.log('add new team\n');
 	while (tempContainer.firstChild) {
 		tempContainer.removeChild(tempContainer.firstChild)
 	}
