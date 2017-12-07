@@ -25,6 +25,9 @@ function Container() {
 	this.addToContainer = function(element) {
 		this.item.appendChild(element);
 	},
+	this.addRole = function(){
+		document.body.setAttribute("role","alert"); //the class has to be "alert alert-primary"
+	},
 	this.addToDocument = function() {
 		document.body.appendChild(this.item);
 	}
@@ -283,7 +286,7 @@ function show_stats(tempContainer){
 
 	//Create search Button
 	searchButton = new Button();
-	searchButton.createButton("Search", "search_button", "btn");
+	searchButton.createButton("Search", "search_button", "btn1");
 	dataContainer.addToContainer(searchButton.item);
 
 	//add event handler
@@ -293,13 +296,6 @@ function show_stats(tempContainer){
 
 //Event Handler: Show More Stats (Wins, Losses, Draws) when a team is selected in the textbox
 function more_stats(tempContainer, tempTextBox){
-	//!!!!!STILL NEED TO DELETE THE PREVIOUS VALUES
-	//for (var i = 0; i < myStatsList.length; i++) {
-	//	var elem = document.getElementById(myStatsList);
-	//	elem.parentNode.removeChild(elem);
-	//}
-
-	///////////////////////////
 	while (tempContainer.firstChild) {
 		tempContainer.removeChild(tempContainer.firstChild)
 	}
@@ -338,15 +334,11 @@ function more_stats(tempContainer, tempTextBox){
 	dataContainer.addToContainer(myDatalist.item);
 	//Create search Button
 	searchButton = new Button();
-	searchButton.createButton("Search", "search_button", "btn");
+	searchButton.createButton("Search", "search_button", "btn1");
 	dataContainer.addToContainer(searchButton.item);
 
 	//add event handler
 	searchButton.addEventHandler2(more_stats, dataContainer.item, myInput.item);
-
-
-
-
 
 	var xhr = new XMLHttpRequest();
 	xhr.open("GET", "http://student04.cse.nd.edu:" + SPORTS_PORT + "/teams/" + tempTextBox.value, true);
@@ -360,21 +352,21 @@ function more_stats(tempContainer, tempTextBox){
 		name = stats["name"];
 
 		myStatsList = [];
+		myStatsList.push(name);
 		myStatsList.push(wins);
 		myStatsList.push(losses);
 		myStatsList.push(draws);
 		myStatsList.push(scoresFor);
 		myStatsList.push(scoresAgainst);
-		myStatsList.push(name);
+		
 
 		myStatsListKeys = [];
+		myStatsListKeys.push("Team Name: ");
 		myStatsListKeys.push("Wins: ");
 		myStatsListKeys.push("Lossess: ");
 		myStatsListKeys.push("Draws: ");
 		myStatsListKeys.push("Total Goals Scored: ");
 		myStatsListKeys.push("Total Goals Allowed: ");
-		myStatsListKeys.push("Team Name: ");
-
 
 		for (var i = 0; i < myStatsList.length; i++) {
 			//options go inside datalist
@@ -387,7 +379,6 @@ function more_stats(tempContainer, tempTextBox){
 		console.error(xhr.statusText);
 	}
 	xhr.send(null)
-	
 
 }
 
@@ -472,7 +463,7 @@ function show_match(tempContainer){
 
 	//Create search Button
 	searchButton = new Button();
-	searchButton.createButton("Search", "search_button", "btn");
+	searchButton.createButton("Search", "search_button", "btn1");
 	dataContainer.addToContainer(searchButton.item);
 
 	//add event handler
@@ -559,7 +550,7 @@ function show_winner(tempContainer, tempTextBox1, tempTextBox2) {
 
 	//Create search Button
 	searchButton = new Button();
-	searchButton.createButton("Search", "search_button", "btn");
+	searchButton.createButton("Search", "search_button", "btn1");
 	dataContainer.addToContainer(searchButton.item);
 
 	//add event handler
@@ -672,7 +663,7 @@ function edit_team(tempContainer) {
 
 	//Create search Button
 	searchButton = new Button();
-	searchButton.createButton("Save Changes", "edit_teams_button", "btn");
+	searchButton.createButton("Save Changes", "edit_teams_button", "btn1");
 	dataContainer.addToContainer(searchButton.item);
 
 	//add event handler
@@ -755,7 +746,7 @@ function add_new_team(tempContainer) {
 
 	//Create search Button
 	searchButton = new Button();
-	searchButton.createButton("Save Changes", "edit_teams_button", "btn");
+	searchButton.createButton("Save Changes", "edit_teams_button", "btn1");
 	dataContainer.addToContainer(searchButton.item);
 
 	//add event handler
@@ -769,20 +760,25 @@ mainContainer.createContainer("container");
 mainContainer.addID("main_container");
 mainContainer.addToDocument();
 
-// options div
+// LEFT CONTAINER options div
 optionsContainer = new Container();
 optionsContainer.createContainer("options");
+optionsContainer.addID("parent");
 mainContainer.addToContainer(optionsContainer.item);
 
-// data div
+// RIGHT CONTAINER data div
 dataContainer = new Container();
 dataContainer.createContainer("data");
 mainContainer.addToContainer(dataContainer.item);
 
+//CURRENTLY HEREEEEEE
+//parentContainer = new Container();
+//parentContainer.createContainer("")
+
+
 // options label
 optionsHeader = new Header();
 optionsHeader.createHeader("Choose option:");
-
 optionsContainer.addToContainer(optionsHeader.item);
 
 //options buttons
@@ -795,11 +791,11 @@ optionsButton2.createButton("Explore Past Premier League Teams", "invalid_teams_
 optionsContainer.addToContainer(optionsButton2.item);
 
 optionsButton3 = new Button();
-optionsButton3.createButton("Show rankings", "rankings_button", "btn");
+optionsButton3.createButton("Show rankings", "rankings_button", "btn child");
 optionsContainer.addToContainer(optionsButton3.item);
 
 optionsButton4 = new Button();
-optionsButton4.createButton("Explore team stats", "stats_button", "btn");
+optionsButton4.createButton("Explore team stats", "stats_button", "btn child");
 optionsContainer.addToContainer(optionsButton4.item);
 
 optionsButton5 = new Button();
